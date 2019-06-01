@@ -58,7 +58,14 @@ func generateLink(node *html.Node) Link {
 			break
 		}
 	}
+	link.Text = getLinkText(node)
 	return link
+}
+
+func getLinkText(node *html.Node) string {
+	if node.Type == html.TextNode {
+		return node.Data
+	}
 }
 
 // ExtractLinks does all the work.
