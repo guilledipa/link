@@ -14,7 +14,7 @@ type Link struct {
 	Text string
 }
 
-func (l *Link) String() string {
+func (l Link) String() string {
 	return fmt.Sprintf("Href: %s\nText: %s\n", l.Href, l.Text)
 }
 
