@@ -2,6 +2,7 @@ package link
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 
 	"golang.org/x/net/html"
@@ -11,6 +12,10 @@ import (
 type Link struct {
 	Href string
 	Text string
+}
+
+func (l *Link) String() string {
+	return fmt.Sprintf("Href: %s\nText: %s\n", l.Href, l.Text)
 }
 
 // parseHTML parses an html file and  the parse tree for the HTML.

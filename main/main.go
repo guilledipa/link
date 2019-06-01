@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 
 	"github.com/guilledipa/link"
@@ -18,6 +19,10 @@ func main() {
 	links, err := link.ExtractLinks(*sampleHTML)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	for _, l := range links {
+		fmt.Println(l)
 	}
 
 }
