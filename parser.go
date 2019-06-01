@@ -26,13 +26,32 @@ func ParseHTML(sampleFile string) (*html.Node, error) {
 }
 
 // Returns a list of link type nodes
-func linkNodes(n *html.Node) []*html.Node {
-	if n.Type == html.ElementNode && n.Data == "a" {
-		return []*html.Node{n}
+func getLinkNodes(node *html.Node) []*html.Node {
+	if node.Type == html.ElementNode && node.Data == "a" {
+		return []*html.Node{node}
 	}
 	var nodes []*html.Node
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		nodes = append(nodes, linkNodes(c)...)
+	for c := node.FirstChild; c != nil; c = c.NextSibling {
+		nodes = append(nodes, getLinkNodes(c)...)
 	}
 	return nodes
+}
+
+func getLinks(nodes []*html.Node) []Link {
+	var links []Link
+	for _, node := range nodes {
+		links = append(links, generateLink(node))
+	}
+	return links
+}
+
+func generateLink(node *html.Node) Link {
+	var link Link
+	for _, a := range node.Attr {
+		if a.Key == "href" {
+			link.Href = a.Val
+			break
+		}
+	}
+	return link
 }
