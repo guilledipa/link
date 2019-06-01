@@ -15,7 +15,7 @@ func main() {
 
 	flag.Parse()
 
-	parsedHTMLTree, err := link.ParseHTML(*sampleHTML)
+	links, err := link.ExtractLinks(*sampleHTML)
 	if err != nil {
 		log.Fatal(err)
 	}

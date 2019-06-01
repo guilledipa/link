@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io/ioutil"
 
+	"github.com/guilledipa/link"
 	"golang.org/x/net/html"
 )
 
@@ -13,8 +14,8 @@ type Link struct {
 	Text string
 }
 
-// ParseHTML parses an html file and  the parse tree for the HTML.
-func ParseHTML(sampleFile string) (*html.Node, error) {
+// parseHTML parses an html file and  the parse tree for the HTML.
+func parseHTML(sampleFile string) (*html.Node, error) {
 	data, err := ioutil.ReadFile(sampleFile)
 	if err != nil {
 		return nil, err
@@ -54,4 +55,16 @@ func generateLink(node *html.Node) Link {
 		}
 	}
 	return link
+}
+
+// ExtractLinks does all the work.
+func ExtractLinks(sampleFile string) ([]Link, error) {
+	var links []Link
+	parsedHTMLTree, err := link.ParseHTML(sampleFile)
+	if err != nil {
+		return nil, err
+	}
+	nodes := getLinkNodes(parsedHTMLTree)
+	links = getLinks(nodes)
+	return links, nil
 }
