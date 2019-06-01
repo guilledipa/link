@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"strings"
 
 	"golang.org/x/net/html"
 )
@@ -64,7 +65,7 @@ func generateLink(node *html.Node) Link {
 
 func getLinkText(node *html.Node) string {
 	if node.Type == html.TextNode {
-		return node.Data
+		return strings.TrimSuffix(node.Data, "\n")
 	}
 	if node.Type != html.ElementNode {
 		return ""
