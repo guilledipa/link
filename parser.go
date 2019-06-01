@@ -66,7 +66,14 @@ func getLinkText(node *html.Node) string {
 	if node.Type == html.TextNode {
 		return node.Data
 	}
-	return ""
+	if node.Type != html.ElementNode {
+		return ""
+	}
+	var text string
+	for c := node.FirstChild; c != nil; c = c.NextSibling {
+		text += getLinkText(c)
+	}
+	return text
 }
 
 // ExtractLinks does all the work.
