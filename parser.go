@@ -65,7 +65,7 @@ func generateLink(node *html.Node) Link {
 
 func getLinkText(node *html.Node) string {
 	if node.Type == html.TextNode {
-		return strings.TrimSuffix(node.Data, "\n")
+		return strings.TrimSpace(node.Data)
 	}
 	if node.Type != html.ElementNode {
 		return ""
