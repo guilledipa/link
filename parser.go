@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"io/ioutil"
 
-	"github.com/guilledipa/link"
 	"golang.org/x/net/html"
 )
 
@@ -60,7 +59,7 @@ func generateLink(node *html.Node) Link {
 // ExtractLinks does all the work.
 func ExtractLinks(sampleFile string) ([]Link, error) {
 	var links []Link
-	parsedHTMLTree, err := link.ParseHTML(sampleFile)
+	parsedHTMLTree, err := parseHTML(sampleFile)
 	if err != nil {
 		return nil, err
 	}
