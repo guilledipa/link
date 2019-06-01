@@ -3,6 +3,7 @@ package link
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"strings"
 
@@ -19,31 +20,29 @@ func (l Link) String() string {
 	return fmt.Sprintf("Href: %s\nText: %s\n", l.Href, l.Text)
 }
 
-// parseHTML parses an html file and  the parse tree for the HTML.
-func parseHTML(sampleFile string) (*html.Node, error) {
-	data, err := ioutil.ReadFile(sampleFile)
+// ParseHTML parses HTML data and returns a parsed tree for the HTML.
+func ParseHTML(r io.Reader) (*html.Node, error) {
+	node, err := html.Parse(r)
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
-	return html.Parse(bytes.NewReader(data))
+	return node, nil
 }
 
-// Returns a list of link type nodes
-func getLinkNodes(node *html.Node) []*html.Node {
+// GetLinkNodes returns a list of link type nodes
+func GetLinkNodes(node *html.Node) []*html.Node {
 	if node.Type == html.ElementNode && node.Data == "a" {
 		return []*html.Node{node}
 	}
 	var nodes []*html.Node
 	for c := node.FirstChild; c != nil; c = c.NextSibling {
-		nodes = append(nodes, getLinkNodes(c)...)
+		nodes = append(nodes, GetLinkNodes(c)...)
 	}
 	return nodes
 }
 
-func getLinks(nodes []*html.Node) []Link {
+// GetLinks returns a list of Links
+func GetLinks(nodes []*html.Node) []Link {
 	var links []Link
 	for _, node := range nodes {
 		links = append(links, generateLink(node))
@@ -80,11 +79,13 @@ func getLinkText(node *html.Node) string {
 // ExtractLinks does all the work.
 func ExtractLinks(sampleFile string) ([]Link, error) {
 	var links []Link
-	parsedHTMLTree, err := parseHTML(sampleFile)
+	data, err := ioutil.ReadFile(sampleFile)
+	r := bytes.NewReader(data)
+	parsedHTMLTree, err := ParseHTML(r)
 	if err != nil {
 		return nil, err
 	}
-	nodes := getLinkNodes(parsedHTMLTree)
-	links = getLinks(nodes)
+	nodes := GetLinkNodes(parsedHTMLTree)
+	links = GetLinks(nodes)
 	return links, nil
 }
